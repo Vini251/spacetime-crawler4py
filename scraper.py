@@ -2,9 +2,11 @@ import re
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 
+
 def scraper(url, resp):
     links = extract_next_links(url, resp)
     return [link for link in links if is_valid(link)]
+
 
 def extract_next_links(url, resp):
     # Implementation required.
@@ -16,28 +18,45 @@ def extract_next_links(url, resp):
     #         resp.raw_response.url: the url, again
     #         resp.raw_response.content: the content of the page!
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
-    
-    #initializing  an empty list to store the list of all the URLs parsed
+
+    # Implementation requred.
     linkList = []
+    crawled = False
+    crawled_URLs = set()
 
-    #Parsing HTML content using BeautifulSoup
-    soup = BeautifulSoup(resp.raw_response.content) 
+    nextLinkFile = open('nextLink.txt', 'a')
 
-    for link in soup.find('a'):
-        url_link = link.get('href')
 
-        if utils.is_valid(url_link)and resp.status >= 200 and resp.status <=202:
-            linkList.append(url_link)
+    check_URL = url
+    #if the last character of URL is "/" remove it
+    if url[-1] == '/':
+        check_URL = url[:-1]
+    
+    #Check if the URl is already crawled or not in the crawled_URLs set
+    if check_URL in crawled_URLs:
+        crawled = True
+    #If it is not present we add the URL to that set
+    elif check_URL not in crawled_URLs:
+        crawled_URLs.add(check_URL)
 
-    with open('nextLinks.txt', 'w') as f:
-        for link in linkList:
-            f.write(link + '\n')
+    #The status between 200 and 202 are good for crawling.
+    if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 202:
+        nextLinkFile.write(url + '\n')
 
+        html_doc = resp.raw_response.content
+        soup = BeautifulSoup(html_doc, 'html.parser')
+
+        for link in soup.find_all('a'):
+            url_Link = link.get('href')
+            linkList.append(url_Link)
+
+    nextLinkFile.close()
 
     return linkList
 
+
 def is_valid(url):
-    # Decide whether to crawl this url or not. 
+    # Decide whether to crawl this url or not.
     # If you decide to crawl it, return True; otherwise return False.
     # There are already some conditions that return False.
     try:
@@ -55,5 +74,5 @@ def is_valid(url):
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())
 
     except TypeError:
-        print ("TypeError for ", parsed)
+        print("TypeError for ", parsed)
         raise
