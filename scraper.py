@@ -47,37 +47,33 @@ def extract_next_links(url, resp):
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
 
     # Implementation requred.
+
     linkList = []
     crawled = False
-    crawled_URLs = set()
-
-    nextLinkFile = open('nextLink.txt', 'a')
-
 
     check_URL = url
-    #if the last character of URL is "/" remove it
-    if url[-1] == '/':
-        check_URL = url[:-1]
-    
-    #Check if the URl is already crawled or not in the crawled_URLs set
+    # if the last character of URL is "/" remove it
+    if url and url[-1] == '/':
+        url = url[:-1]
+
+    # Check if the URl is already crawled or not in the crawled_URLs set
     if check_URL in crawled_URLs:
         crawled = True
-    #If it is not present we add the URL to that set
+    # If it is not present we add the URL to that set
     elif check_URL not in crawled_URLs:
         crawled_URLs.add(check_URL)
 
-    #The status between 200 and 202 are good for crawling.
-    if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 202:
-        nextLinkFile.write(url + '\n')
+    # The status between 200 and 202 are good for crawling.
+    if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 202:
+        with open("nextLink.txt", "a") as nextLinkFile:
+            nextLinkFile.write(url + '\n')
 
-        html_doc = resp.raw_response.content
-        soup = BeautifulSoup(html_doc, 'html.parser')
+            html_doc = resp.content
+            soup = BeautifulSoup(html_doc, 'html.parser')
 
-        for link in soup.find_all('a'):
-            url_Link = link.get('href')
-            linkList.append(url_Link)
-
-    nextLinkFile.close()
+            for link in soup.find_all('a'):
+                url_Link = link.get('href')
+                linkList.append(url_Link + '\n')
 
     return linkList
 
@@ -103,3 +99,12 @@ def is_valid(url):
     except TypeError:
         print("TypeError for ", parsed)
         raise
+
+
+URL = "http://www.stat.uci.edu"
+response = requests.get(URL)
+
+link = extract_next_links(URL, response)
+for links in link:
+    print(links)
+print(len(link))
