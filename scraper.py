@@ -69,10 +69,12 @@ def extract_next_links(url, resp):
         crawled_URLs.add(check_URL)
 
     #The status between 200 and 202 are good for crawling.
-    if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 202:
+    #if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 202:
+    if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 202:
         nextLinkFile.write(url + '\n')
 
-        html_doc = resp.raw_response.content
+        #html_doc = resp.raw_response.content
+        html_doc = resp.content
         soup = BeautifulSoup(html_doc, 'html.parser')
 
         for link in soup.find_all('a'):
