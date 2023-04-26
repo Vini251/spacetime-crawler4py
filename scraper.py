@@ -51,10 +51,6 @@ def extract_next_links(url, resp):
     # Implementation requred.
     linkList = []
     crawled = False
-    crawled_URLs = set()
-
-    nextLinkFile = open('nextLink.txt', 'a')
-
 
     check_URL = url
     #if the last character of URL is "/" remove it
@@ -71,17 +67,23 @@ def extract_next_links(url, resp):
     #The status between 200 and 202 are good for crawling.
     #if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 202:
     if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 202:
-        nextLinkFile.write(url + '\n')
+        with open("nextLink.txt", "a") as nextLinkFile:
 
-        #html_doc = resp.raw_response.content
-        html_doc = resp.content
-        soup = BeautifulSoup(html_doc, 'html.parser')
+            #html_doc = resp.raw_response.content
+            html_doc = resp.content
+            soup = BeautifulSoup(html_doc, 'html.parser')
 
-        for link in soup.find_all('a'):
-            url_Link = link.get('href')
-            linkList.append(url_Link)
+            for link in soup.find_all('a'):
+                urlLink = link.get('href')
+                if urlLink == None:
+                    continue
 
-    nextLinkFile.close()
+
+                if urlLink.find("#") != -1:
+                    urlLink = urlLink[:urlLink.find("#")]
+                    linkList.append(urlLink)
+                else:
+                    linkList.append(urlLink)
 
     return linkList
 
@@ -114,7 +116,7 @@ def is_valid(url):
 URL = "http://www.stat.uci.edu"
 response = requests.get(URL)
 
-link = extract_next_links(URL, response)
+link = scraper(URL, response)
 for links in link:
     print(links)
 print(len(link))
