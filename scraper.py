@@ -6,6 +6,8 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
+crawled_URLs = set()
+
 def tokenize(url):
     # Retrieve HTML content from the URL
     response = requests.get(url)
