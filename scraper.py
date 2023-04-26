@@ -77,12 +77,9 @@ def extract_next_links(url, resp):
                 urlLink = link.get('href')
                 if urlLink == None:
                     continue
-
-
-                if urlLink.find("#") != -1:
-                    urlLink = urlLink[:urlLink.find("#")]
-                    linkList.append(urlLink)
-                else:
+                if(urlLink not in linkList):
+                    if urlLink.find("#") != -1:
+                        urlLink = urlLink[:urlLink.find("#")]
                     linkList.append(urlLink)
 
     return linkList
