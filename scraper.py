@@ -1,9 +1,7 @@
 import re
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
-
 import requests
-from bs4 import BeautifulSoup
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
