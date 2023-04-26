@@ -109,3 +109,10 @@ def is_valid(url):
         print("TypeError for ", parsed)
         raise
 
+URL = "http://www.stat.uci.edu"
+response = requests.get(URL)
+
+link = extract_next_links(URL, response)
+for links in link:
+    print(links)
+print(len(link))
