@@ -51,6 +51,8 @@ def extract_next_links(url, resp):
     # Implementation requred.
     linkList = []
     crawled = False
+    global crawled_URLs
+    visitedLinks = set()
 
     check_URL = url
     #if the last character of URL is "/" remove it
@@ -83,7 +85,10 @@ def extract_next_links(url, resp):
                     urlLink = urlLink[:urlLink.find("#")]
                     linkList.append(urlLink)
                 else:
-                    linkList.append(urlLink)
+                    linkList.append(urlLink)'
+
+                visitedLinks.add(urlLink)
+                nextLinkFile.write(urlLink + '\n')
 
     return linkList
 
