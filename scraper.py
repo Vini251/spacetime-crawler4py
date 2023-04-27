@@ -113,6 +113,7 @@ def is_valid(url):
 
 URL = "http://www.stat.uci.edu"
 response = requests.get(URL)
+print(tokenize(URL))
 
 link = extract_next_links(URL, response)
 for links in link:
