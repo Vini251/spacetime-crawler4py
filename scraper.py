@@ -38,21 +38,9 @@ def scraper(url, resp):
 
 
 def extract_next_links(url, resp):
-    # Implementation required.
-    # url: the URL that was used to get the page
-    # resp.url: the actual url of the page
-    # resp.status: the status code returned by the server. 200 is OK, you got the page. Other numbers mean that there was some kind of problem.
-    # resp.error: when status is not 200, you can check the error here, if needed.
-    # resp.raw_response: this is where the page actually is. More specifically, the raw_response has two parts:
-    #         resp.raw_response.url: the url, again
-    #         resp.raw_response.content: the content of the page!
-    # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
-
-    # Implementation requred.
     linkList = []
     crawled = False
-    global crawled_URLs
-    visitedLinks = set()
+    content = []
 
     check_URL = url
     #if the last character of URL is "/" remove it
@@ -67,56 +55,77 @@ def extract_next_links(url, resp):
         crawled_URLs.add(check_URL)
 
     #The status between 200 and 202 are good for crawling.
-    #if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 202:
+    #if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 202:  #Use this line for crawler
     if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 202:
-        with open("nextLink.txt", "a") as nextLinkFile:
+        with open("nextLink.txt", "w") as nextLinkFile:
 
-            #html_doc = resp.raw_response.content
+            #html_doc = resp.raw_response.content    #use this line for crawler
             html_doc = resp.content
             soup = BeautifulSoup(html_doc, 'html.parser')
+
+            text = soup.get_text().split()
+            for word in text:
+                if word.isalnum():
+                    content.append(word)
+            with open("contentFile.txt", "w") as contentFile:
+                contentFile.write(url + '\n' + str(len(content)) + '\n')
+            
 
             for link in soup.find_all('a'):
                 urlLink = link.get('href')
                 if urlLink == None:
                     continue
-
-
-                if urlLink.find("#") != -1:
-                    urlLink = urlLink[:urlLink.find("#")]
+                if(urlLink not in linkList) and is_valid(urlLink):
+                    if urlLink.find("#") != -1:
+                        urlLink = urlLink[:urlLink.find("#")]
                     linkList.append(urlLink)
-                else:
-                    linkList.append(urlLink)'
-
-                visitedLinks.add(urlLink)
-                nextLinkFile.write(urlLink + '\n')
+                    nextLinkFile.write(urlLink + "\n")
+            
 
     return linkList
 
 
 def is_valid(url):
-    # Decide whether to crawl this url or not.
-    # If you decide to crawl it, return True; otherwise return False.
-    # There are already some conditions that return False.
     try:
+        if "/pdf/" in url or "mailto:" in url or "@" in url:
+            return False
         parsed = urlparse(url)
+       
         if parsed.scheme not in set(["http", "https"]):
             return False
 
-        netloc = parsed.netloc
 
-        return not re.match(
-            r".*\.(css|js|bmp|gif|jpe?g|ico"
-            + r"|png|tiff?|mid|mp2|mp3|mp4"
-            + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
-            + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
-            + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
-            + r"|epub|dll|cnf|tgz|sha1"
-            + r"|thmx|mso|arff|rtf|jar|csv"
-            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())
+        if ("ics.uci.edu" in parsed.netloc or "cs.uci.edu" in parsed.netloc or "informatics.uci.edu" in parsed.netloc or "stat.uci.edu" in parsed.netloc) or (parsed.netloc == "" and str(parsed.path)[0:len("today.uci.edu/department/information_computer_sciences")] == "today.uci.edu/department/information_computer_sciences"):
+            if (re.match(
+                r".*\.(css|js|bmp|gif|jpe?g|ico"
+                + r"|png|tiff?|mid|mp2|mp3|mp4"
+                + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
+                + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
+                + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
+                + r"|epub|dll|cnf|tgz|sha1"
+                + r"|thmx|mso|arff|rtf|jar|csv"
+                + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", url.lower())):
+                    return False
+            return not re.match(
+                r".*\.(css|js|bmp|gif|jpe?g|ico"
+                + r"|png|tiff?|mid|mp2|mp3|mp4"
+                + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf|mpg"
+                + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
+                + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
+                + r"|epub|dll|cnf|tgz|sha1"
+                + r"|thmx|mso|arff|rtf|jar|csv"
+                + r"|war|"
+                + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())
+        return False
+
 
     except TypeError:
         print("TypeError for ", parsed)
         raise
+
+
+
+
 
 URL = "http://www.stat.uci.edu"
 response = requests.get(URL)
