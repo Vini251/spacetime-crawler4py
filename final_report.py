@@ -15,10 +15,22 @@ def count_domain(subdomain) -> int:
 def unique_page() -> int:
     pass
 
-#Write the longest page function.
+#Write the longest page function. - Vini
 #What is the longest page in terms of the number of words? (HTML markup doesn’t count as words)
-def longest_page():
-    pass
+def longest_page(contentFile):
+    solution = open('Solution.txt', 'a')
+
+    longest = 0
+    longest_page = ''
+
+    for length in range(1, len(contentFile), 2):
+        if int(contentFile[length]) > longest:
+            longest = int(contentFile[length])
+            longest_page = contentFile[length - 1]
+
+    solution.write('2. The longest page is ' + longest_page + 'with ' + str(longest) + ' words.' + '\n')
+    solution.close()
+
 
 
 #Write a common word function. - Oscar
