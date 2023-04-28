@@ -1,8 +1,7 @@
 import re
+import nltk
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
-import nltk
-nltk.download('punkt')
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import requests
@@ -48,11 +47,11 @@ def extract_next_links(url, resp):
 
     #The status between 200 and 202 are good for crawling.
     if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 202:  #Use this line for crawler
-    #if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 202:
+    # if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 202:
         with open("nextLink.txt", "a") as nextLinkFile:
 
             html_doc = resp.raw_response.content    #use this line for crawler
-            #html_doc = resp.content
+            # html_doc = resp.content
             soup = BeautifulSoup(html_doc, 'html.parser')
 
             text = soup.get_text()
