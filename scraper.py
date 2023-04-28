@@ -4,7 +4,6 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-import requests
 
 crawled_URLs = set()
 
