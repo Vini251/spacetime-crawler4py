@@ -3,8 +3,10 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 import urllib.request
 import nltk
+nltk.download('punkt')
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+import requests
 
 crawled_URLs = set()
 
@@ -116,8 +118,6 @@ def is_valid(url):
 
 
 
-
-"""
 URL = "http://www.stat.uci.edu"
 response = requests.get(URL)
 print(tokenize(URL))
@@ -126,4 +126,4 @@ link = scraper(URL, response)
 for links in link:
     print(links)
 print(len(link))
-"""
+
