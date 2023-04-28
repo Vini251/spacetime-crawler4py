@@ -16,7 +16,12 @@ def count_domain(subdomain) -> int:
 # the same URL. Even if you implement additional methods for textual similarity detection, please keep considering
 # the above definition of unique pages for the purposes of counting the unique pages in this assignment.
 def unique_page() -> int:
-    pass
+    solution = open('Solution.txt', 'a')
+    unique = set()
+    for url in URLlist:
+        unique.add(url)
+    solution.write('The number of unique pages is ' + str(len(unique)) + '\n')
+    solution.close()
 
 #Write the longest page function. - Vini
 #What is the longest page in terms of the number of words? (HTML markup doesn’t count as words)

@@ -117,7 +117,7 @@ def is_valid(url):
 
 
 
-"""
+
 URL = "http://www.stat.uci.edu"
 response = requests.get(URL)
 print(tokenize(URL))
@@ -126,4 +126,4 @@ link = scraper(URL, response)
 for links in link:
     print(links)
 print(len(link))
-"""
+
