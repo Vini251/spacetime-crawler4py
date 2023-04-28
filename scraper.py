@@ -1,7 +1,6 @@
 import re
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
-import urllib.request
 import nltk
 nltk.download('punkt')
 from nltk.corpus import stopwords
@@ -55,12 +54,11 @@ def extract_next_links(url, resp):
             html_doc = resp.raw_response.content    #use this line for crawler
             #html_doc = resp.content
             soup = BeautifulSoup(html_doc, 'html.parser')
-            #tokenize function
-            content_tokenized = tokenize(soup.getText())
-            for value in content_tokenized.values():
-                total_word_count+=value
+
+            text = soup.get_text()
+            content = tokenize(text)
             with open("contentFile.txt", "a") as contentFile:
-                contentFile.write(url + '\n' + str(total_word_count) + '\n')
+                contentFile.write(url + ' - ' + str(len(content)) + '\n')
             
 
             for link in soup.find_all('a'):
@@ -118,12 +116,12 @@ def is_valid(url):
 
 
 
-URL = "http://www.stat.uci.edu"
-response = requests.get(URL)
-print(tokenize(URL))
 
-link = scraper(URL, response)
-for links in link:
-    print(links)
-print(len(link))
 
+# URL = "http://www.stat.uci.edu"
+# response = requests.get(URL)
+
+# link = scraper(URL, response)
+# for links in link:
+#     print(links)
+# print(len(link))
