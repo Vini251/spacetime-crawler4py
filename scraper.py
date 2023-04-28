@@ -1,34 +1,24 @@
 import re
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
-import requests
+import urllib.request
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
 crawled_URLs = set()
 
-def tokenize(url):
-    # Retrieve HTML content from the URL
-    response = requests.get(url)
-    html_content = response.text
-
-    # Parse the HTML content using BeautifulSoup
-    soup = BeautifulSoup(html_content, 'html.parser')
-
-    # Extract text from the HTML content
-    text = soup.get_text()
-
+def tokenize(text):
     # Tokenize the text into words
     tokens = word_tokenize(text)
-
+    stopwordfile = open("stopwords.txt")
     # Remove stop words
-    stop_words = set(stopwords.words('english'))
+    stop_words = [word for word in stopwordfile]
     tokens = [token for token in tokens if token.lower() not in stop_words]
 
     # Count the frequency of each token
     token_freq = nltk.FreqDist(tokens)
-
+    stopwordfile.close()
     return token_freq
 
 
@@ -41,6 +31,7 @@ def extract_next_links(url, resp):
     linkList = []
     crawled = False
     content = []
+    total_word_count = 0
 
     check_URL = url
     #if the last character of URL is "/" remove it
@@ -55,13 +46,19 @@ def extract_next_links(url, resp):
         crawled_URLs.add(check_URL)
 
     #The status between 200 and 202 are good for crawling.
+<<<<<<< HEAD
     #if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 202:  #Use this line for crawler
     if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 202:
+=======
+    if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 202:  #Use this line for crawler
+    #if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 202:
+>>>>>>> 310b8fe60de0f644f1616fdbba3bb66d97b7117f
         with open("nextLink.txt", "a") as nextLinkFile:
 
-            #html_doc = resp.raw_response.content    #use this line for crawler
-            html_doc = resp.content
+            html_doc = resp.raw_response.content    #use this line for crawler
+            #html_doc = resp.content
             soup = BeautifulSoup(html_doc, 'html.parser')
+<<<<<<< HEAD
 
             text = soup.get_text().split()
             for word in text:
@@ -69,6 +66,14 @@ def extract_next_links(url, resp):
                     content.append(word)
             with open("contentFile.txt", "a") as contentFile:
                 contentFile.write(url + '\n' + str(len(content)) + '\n')
+=======
+            #tokenize function
+            content_tokenized = tokenize(soup.getText())
+            for value in content_tokenized.values():
+                total_word_count+=value
+            with open("contentFile.txt", "a") as contentFile:
+                contentFile.write(url + '\n' + str(total_word_count) + '\n')
+>>>>>>> 310b8fe60de0f644f1616fdbba3bb66d97b7117f
             
 
             for link in soup.find_all('a'):
@@ -80,6 +85,7 @@ def extract_next_links(url, resp):
                         urlLink = urlLink[:urlLink.find("#")]
                     linkList.append(urlLink)
                     nextLinkFile.write(urlLink + "\n")
+
             
 
     return linkList
@@ -126,7 +132,7 @@ def is_valid(url):
 
 
 
-
+"""
 URL = "http://www.stat.uci.edu"
 response = requests.get(URL)
 print(tokenize(URL))
@@ -134,4 +140,9 @@ print(tokenize(URL))
 link = scraper(URL, response)
 for links in link:
     print(links)
+<<<<<<< HEAD
 print(len(link))
+=======
+print(len(link))
+"""
+>>>>>>> 310b8fe60de0f644f1616fdbba3bb66d97b7117f
