@@ -1,35 +1,10 @@
 import re
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
-import requests
-import nltk
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
+
 
 crawled_URLs = set()
 
-def tokenize(url):
-    # Retrieve HTML content from the URL
-    response = requests.get(url)
-    html_content = response.text
-
-    # Parse the HTML content using BeautifulSoup
-    soup = BeautifulSoup(html_content, 'html.parser')
-
-    # Extract text from the HTML content
-    text = soup.get_text()
-
-    # Tokenize the text into words
-    tokens = word_tokenize(text)
-
-    # Remove stop words
-    stop_words = set(stopwords.words('english'))
-    tokens = [token for token in tokens if token.lower() not in stop_words]
-
-    # Count the frequency of each token
-    token_freq = nltk.FreqDist(tokens)
-
-    return token_freq
 
 
 def scraper(url, resp):
@@ -55,19 +30,19 @@ def extract_next_links(url, resp):
         crawled_URLs.add(check_URL)
 
     #The status between 200 and 202 are good for crawling.
-    #if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 202:  #Use this line for crawler
-    if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 202:
-        with open("nextLink.txt", "w") as nextLinkFile:
+    if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 202:  #Use this line for crawler
+    #if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 202:
+        with open("nextLink.txt", "a") as nextLinkFile:
 
-            #html_doc = resp.raw_response.content    #use this line for crawler
-            html_doc = resp.content
+            html_doc = resp.raw_response.content    #use this line for crawler
+            #html_doc = resp.content
             soup = BeautifulSoup(html_doc, 'html.parser')
 
             text = soup.get_text().split()
             for word in text:
                 if word.isalnum():
                     content.append(word)
-            with open("contentFile.txt", "w") as contentFile:
+            with open("contentFile.txt", "a") as contentFile:
                 contentFile.write(url + '\n' + str(len(content)) + '\n')
             
 
@@ -127,10 +102,3 @@ def is_valid(url):
 
 
 
-URL = "http://www.stat.uci.edu"
-response = requests.get(URL)
-
-link = scraper(URL, response)
-for links in link:
-    print(links)
-print(len(link))
