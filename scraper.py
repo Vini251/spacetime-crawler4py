@@ -1,8 +1,8 @@
 import re
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
-import urllib.request
 import nltk
+nltk.download('punkt')
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
@@ -46,34 +46,18 @@ def extract_next_links(url, resp):
         crawled_URLs.add(check_URL)
 
     #The status between 200 and 202 are good for crawling.
-<<<<<<< HEAD
-    #if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 202:  #Use this line for crawler
-    if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 202:
-=======
     if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 202:  #Use this line for crawler
     #if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 202:
->>>>>>> 310b8fe60de0f644f1616fdbba3bb66d97b7117f
         with open("nextLink.txt", "a") as nextLinkFile:
 
             html_doc = resp.raw_response.content    #use this line for crawler
             #html_doc = resp.content
             soup = BeautifulSoup(html_doc, 'html.parser')
-<<<<<<< HEAD
 
-            text = soup.get_text().split()
-            for word in text:
-                if word.isalnum():
-                    content.append(word)
+            text = soup.get_text()
+            content = tokenize(text)
             with open("contentFile.txt", "a") as contentFile:
-                contentFile.write(url + '\n' + str(len(content)) + '\n')
-=======
-            #tokenize function
-            content_tokenized = tokenize(soup.getText())
-            for value in content_tokenized.values():
-                total_word_count+=value
-            with open("contentFile.txt", "a") as contentFile:
-                contentFile.write(url + '\n' + str(total_word_count) + '\n')
->>>>>>> 310b8fe60de0f644f1616fdbba3bb66d97b7117f
+                contentFile.write(url + ' - ' + str(len(content)) + '\n')
             
 
             for link in soup.find_all('a'):
@@ -132,17 +116,11 @@ def is_valid(url):
 
 
 
-"""
-URL = "http://www.stat.uci.edu"
-response = requests.get(URL)
-print(tokenize(URL))
 
-link = scraper(URL, response)
-for links in link:
-    print(links)
-<<<<<<< HEAD
-print(len(link))
-=======
-print(len(link))
-"""
->>>>>>> 310b8fe60de0f644f1616fdbba3bb66d97b7117f
+# URL = "http://www.stat.uci.edu"
+# response = requests.get(URL)
+
+# link = scraper(URL, response)
+# for links in link:
+#     print(links)
+# print(len(link))
