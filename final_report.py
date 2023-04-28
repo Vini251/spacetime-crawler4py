@@ -3,6 +3,9 @@
 # and the number of unique pages detected in each subdomain. The content of this list should be lines containing URL,
 # number, for example:
 #http://vision.ics.uci.edu, 10 (not the actual number here)
+from collections import Counter
+
+
 def count_domain(subdomain) -> int:
     pass
 
@@ -36,5 +39,9 @@ def longest_page(contentFile):
 #Write a common word function. - Oscar
 #What are the 50 most common words in the entire set of pages crawled under these domains ? (Ignore English stop words,
 #which can be found, for example, hereLinks to an external site.) Submit the list of common words ordered by frequency.
-def common_words() -> int:
-    pass
+def common_words(word_list) -> list:
+    frequency_list = []
+    frequency = Counter(word_list)
+    for word in frequency.most_common(50):
+        frequency_list.append(word)
+    return frequency_list
