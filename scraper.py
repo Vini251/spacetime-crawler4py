@@ -1,12 +1,14 @@
 import re
-import nltk
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
+import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-import requests
+import hashlib
 
 crawled_URLs = set()
+#hash values on all websites
+all_website_hash = []
 
 def tokenize(text):
     # Tokenize the text into words
@@ -25,8 +27,22 @@ def tokenize(text):
 def scraper(url, resp):
     links = extract_next_links(url, resp)
     return [link for link in links if is_valid(link)]
+#detects crawler traps
+def trap_detection(soup):
+    tokenized_words = tokenize(soup.getText())
+    hash = hashlib.sha256()
+    #updates hash value for every key in tokenized_words
+    for token in tokenized_words.keys():  
+        hash.update(token.encode("utf-8"))
+    #checks to see if hash value is in all_website_hash
+    if(hash.hexdigest() in all_website_hash):
+        return False  
+    else:
+        all_website_hash.append(hash.hexdigest())  
+        return True
 
-
+        
+    
 def extract_next_links(url, resp):
     linkList = []
     crawled = False
@@ -47,28 +63,32 @@ def extract_next_links(url, resp):
 
     #The status between 200 and 202 are good for crawling.
     if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 202:  #Use this line for crawler
-    # if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 202:
+    #if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 202:
         with open("nextLink.txt", "a") as nextLinkFile:
 
             html_doc = resp.raw_response.content    #use this line for crawler
-            # html_doc = resp.content
+            #html_doc = resp.content
             soup = BeautifulSoup(html_doc, 'html.parser')
-
-            text = soup.get_text()
-            content = tokenize(text)
-            with open("contentFile.txt", "a") as contentFile:
-                contentFile.write(url + ' - ' + str(len(content)) + '\n')
-            
-
-            for link in soup.find_all('a'):
-                urlLink = link.get('href')
-                if urlLink == None:
-                    continue
-                if(urlLink not in linkList) and is_valid(urlLink):
-                    if urlLink.find("#") != -1:
-                        urlLink = urlLink[:urlLink.find("#")]
-                    linkList.append(urlLink)
-                    nextLinkFile.write(urlLink + "\n")
+            #checks to see if hash_value already exists in all_website_hash
+            if(trap_detection(soup)):
+                #tokenize function
+                content_tokenized = tokenize(soup.getText())
+                #adds up total word cord from URL
+                for value in content_tokenized.values():
+                    total_word_count+=value
+                #appends url and word count to contentFile.txt
+                with open("contentFile.txt", "a") as contentFile:
+                    contentFile.write(url + '\n' + str(total_word_count) + '\n')
+                #find all links to url
+                for link in soup.find_all('a'):
+                    urlLink = link.get('href')
+                    if urlLink == None:
+                        continue
+                    if(urlLink not in linkList) and is_valid(urlLink):
+                        if urlLink.find("#") != -1:
+                            urlLink = urlLink[:urlLink.find("#")]
+                        linkList.append(urlLink)
+                        nextLinkFile.write(urlLink + "\n")
 
             
 
@@ -116,11 +136,13 @@ def is_valid(url):
 
 
 
+"""
+URL = "http://www.stat.uci.edu"
+response = requests.get(URL)
+print(tokenize(URL))
 
-# URL = "http://www.stat.uci.edu"
-# response = requests.get(URL)
-
-# link = scraper(URL, response)
-# for links in link:
-#     print(links)
-# print(len(link))
+link = scraper(URL, response)
+for links in link:
+    print(links)
+print(len(link))
+"""
