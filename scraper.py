@@ -83,6 +83,10 @@ def extract_next_links(url, resp):
                     #appends url and word count to contentFile.txt
                     with open("contentFile.txt", "a") as contentFile:
                         contentFile.write(url + '\n' + str(total_word_count) + '\n')
+                    #appends url to URLListFile.txt
+                    with open("URLListFile.txt", "a") as urlListFile:
+                        urlListFile.write(url + "\n")
+
                     #find all links to url
                     for link in soup.find_all('a'):
                         urlLink = link.get('href')
@@ -94,42 +98,44 @@ def extract_next_links(url, resp):
                             linkList.append(urlLink)
                             nextLinkFile.write(urlLink + "\n")
 
-            
-
     return linkList
 
 def is_valid(url):
     try:
-        if "/pdf/" in url or "mailto:" in url or "@" in url:
-            return False
         parsed = urlparse(url)
-       
         if parsed.scheme not in set(["http", "https"]):
             return False
-
-
-        if ("ics.uci.edu" in parsed.netloc or "cs.uci.edu" in parsed.netloc or "informatics.uci.edu" in parsed.netloc or "stat.uci.edu" in parsed.netloc) or (parsed.netloc == "" and str(parsed.path)[0:len("today.uci.edu/department/information_computer_sciences")] == "today.uci.edu/department/information_computer_sciences"):
-            if (re.match(
-                r".*\.(css|js|bmp|gif|jpe?g|ico"
-                + r"|png|tiff?|mid|mp2|mp3|mp4"
-                + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
-                + r"|ps|eps|tex|ppt|ppsx|pptx|doc|docx|xls|xlsx|names"
-                + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
-                + r"|epub|dll|cnf|tgz|sha1"
-                + r"|thmx|mso|arff|rtf|jar|csv"
-                + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", url.lower())):
-                    return False
-            return not re.match(
-                r".*\.(css|js|bmp|gif|jpe?g|ico"
-                + r"|png|tiff?|mid|mp2|mp3|mp4"
-                + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf|mpg"
-                + r"|ps|eps|tex|ppt|pptx|ppsx|doc|docx|xls|xlsx|names"
-                + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
-                + r"|epub|dll|cnf|tgz|sha1"
-                + r"|thmx|mso|arff|rtf|jar|csv"
-                + r"|war|"
-                + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())
-        return False
+        return not re.match(
+            r".*\.(css|js|bmp|gif|jpe?g|ico"
+            + r"|png|tiff?|mid|mp2|mp3|mp4"
+            + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
+            + r"|ps|eps|tex|ppt|ppsx|pptx|doc|docx|xls|xlsx|names"
+            + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
+            + r"|epub|dll|cnf|tgz|sha1"
+            + r"|thmx|mso|arff|rtf|jar|csv"
+            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower()) and \
+            not re.search(  #remove all urls with any queries that match the ending.
+               r".*\.(css|js|bmp|gif|jpe?g|ico"
+               + r"|png|tiff?|mid|mp2|mp3|mp4"
+               + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
+               + r"|ps|eps|tex|ppt|ppsx|pptx|doc|docx|xls|xlsx|names"
+               + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
+               + r"|epub|dll|cnf|tgz|sha1"
+               + r"|thmx|mso|arff|rtf|jar|csv"
+               + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.query.lower()) and \
+            re.search( #url must contain one of the domains
+                r".*\.(ics.uci.edu|cs.uci.edu|informatics.uci.edu|stat.uci.edu|"
+                + r"today.uci.edu/department/information_computer_sciences)", parsed.netloc.lower()) and \
+            not (re.search(r"\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])", parsed.path.lower()) and #remove urls that are from WICS calendar by path examination
+                 re.search(r"(wics\.)", parsed.netloc.lower())) and \
+            not re.search(r"(calendar.ics.uci.edu)", parsed.netloc.lower()) and \
+            not re.search(r"(replytocom=)", parsed.query.lower()) and \
+            not re.search(r"(version=)", parsed.query.lower()) and \
+            not re.search(r"(share=)", parsed.query.lower()) and \
+            not re.search(r"(wics-hosts-a-toy-hacking-workshop-with-dr-garnet-hertz)", parsed.path.lower()) and \
+            not (re.search(r"(isg\.)", parsed.netloc.lower()) and re.search(r"(action=)", parsed.query.lower())) and \
+            not (re.search(r"(mt-live\.)", parsed.netloc.lower()) and re.search(r"(events)", parsed.path.lower())) and \
+            not (re.search(r"(mt-live\.)", parsed.netloc.lower()) and re.search(r"(filter)", parsed.query.lower()))
 
 
     except TypeError:
@@ -140,12 +146,12 @@ def is_valid(url):
 
 
 
-URL = "http://www.stat.uci.edu"
-response = requests.get(URL)
-print(tokenize(URL))
+# URL = "http://www.stat.uci.edu"
+# response = requests.get(URL)
+# print(tokenize(URL))
 
-link = scraper(URL, response)
-for links in link:
-    print(links)
-print(len(link))
+# link = scraper(URL, response)
+# for links in link:
+#     print(links)
+# print(len(link))
 
