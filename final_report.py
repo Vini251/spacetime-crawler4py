@@ -68,3 +68,4 @@ def common_words(word_list) -> list:
     for word in frequency.most_common(50):
         frequency_list.append(word)
     return frequency_list
+
