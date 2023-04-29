@@ -1,26 +1,44 @@
+from collections import Counter
+from urllib.parse import urlparse
+
 #Write a domain function that counts the number of subdomains.
 #How many subdomains did you find in the ics.uci.edu domain? Submit the list of subdomains ordered alphabetically
 # and the number of unique pages detected in each subdomain. The content of this list should be lines containing URL,
 # number, for example:
 #http://vision.ics.uci.edu, 10 (not the actual number here)
-from collections import Counter
+def count_domain(URLListFile) -> int:
+    solution = open('Solution.txt', 'a')
+    subdomainDict = dict()
+    for url in URLListFile:
+        parsed = urlparse(url)
+        netloc = parsed.netloc
+        netlocList = netloc.split('.')
+        subdomain = ''
+        if len(netlocList) >= 4:
+            subdomain = '.'.join(netlocList[1:])
+        if subdomain == 'ics.uci.edu':
+            if netloc in subdomainDict:
+                subdomainDict[netloc] += 1
+            else:
+                subdomainDict[netloc] = 1
+
+    solution.write('4. Subdomain num = ' + str(len(subdomainDict)) + '\n')
+    for key, value in subdomainDict.items():
+        solution.write(key + ' ' + str(value) + '\n')
+    solution.close()
 
 
-def count_domain(subdomain) -> int:
-    pass
-
-
-#Write a unique page function.
+#Write a unique page function. - Alex
 #How many unique pages did you find? Uniqueness for the purposes of this assignment is ONLY established by the URL,
 # but discarding the fragment part. So, for example, http://www.ics.uci.edu#aaa and http://www.ics.uci.edu#bbb are
 # the same URL. Even if you implement additional methods for textual similarity detection, please keep considering
 # the above definition of unique pages for the purposes of counting the unique pages in this assignment.
-def unique_page() -> int:
+def unique_page(URLListFile) -> int:
     solution = open('Solution.txt', 'a')
     unique = set()
-    for url in URLlist:
+    for url in URLListFile:
         unique.add(url)
-    solution.write('The number of unique pages is ' + str(len(unique)) + '\n')
+    solution.write('1. The number of unique pages is ' + str(len(unique)) + '\n')
     solution.close()
 
 #Write the longest page function. - Vini
