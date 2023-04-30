@@ -87,7 +87,7 @@ def extract_next_links(url, resp):
                     with open("contentNumfile.txt", "a") as contentNumFile:
                         contentNumFile.write(url + '\n' + str(len(content)) + '\n')
                     #appends url to URLListFile.txt
-                    with open("URLListFile.txt", "a") as urlListFile: ""
+                    with open("URLListFile.txt", "a") as urlListFile:
                         urlListFile.write(url + "\n")
 
                     #find all links to url
