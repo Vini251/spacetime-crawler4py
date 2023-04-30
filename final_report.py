@@ -15,22 +15,22 @@ def unique_page(urlListFile) -> int:
     solution.write('1. The number of unique pages is ' + str(len(unique)) + '\n')
     solution.close()
 
-def longest_page(URLcontentNumList):
+def longest_page(URLcontentList):
     solution = open('Solution.txt', 'a')
     solution.write('2. ')
 
     longest = 0
     longest_page = ''
 
-    for length in range(1, len(URLcontentNumList), 2):
-        if int(URLcontentNumList[length]) > longest:
-            longest = int(URLcontentNumList[length])
-            longest_page = URLcontentNumList[length - 1]
+    for length in range(1, len(URLcontentList), 2):
+        if int(URLcontentList[length]) > longest:
+            longest = int(URLcontentList[length])
+            longest_page = URLcontentList[length - 1]
 
     solution.write('The longest page is ' + longest_page + 'with ' + str(longest) + ' words.' + '\n')
     solution.close()
 
-def common_words(URLcontentList):
+def common_words(URLcontent):
     stopwords = []
     stopwordsFile = open('stopwords.txt', 'r')
     for line in stopwordsFile:
@@ -41,7 +41,7 @@ def common_words(URLcontentList):
     solution.write('3. The 50 most common words are: \n')
 
     wordNumDict = dict()
-    for URLcontents in URLcontentList[1::2]:
+    for URLcontents in URLcontent[1::2]:
         contents = URLcontents.split(',')
         for content in contents:
             word = content.lower().strip().replace("'", '')
@@ -91,11 +91,13 @@ def count_domain(urlListFile) -> int:
 if __name__ == '__main__':
     urlListFile = open('URLListFile.txt', 'r')
     contentFile = open('contentFile.txt', 'r')
-    contentNumFile = open('contentNumFile.txt', 'r')
+    URLcontentFile = open('URLcontentfile', 'r')
+    
 
     URLlist = []
     URLcontentList = []
-    URLcontentNumList = []
+    URLcontent = []
+    
 
     for line in urlListFile:
         URLlist.append(line)
@@ -103,16 +105,17 @@ if __name__ == '__main__':
     for line in contentFile:
         URLcontentList.append(line)
 
-    for line in contentNumFile:
-        URLcontentNumList.append(line)
+    for line in URLcontentFile:
+        URLcontent.append(line)
 
     unique_page(URLlist)
-    longest_page(URLcontentNumList)
-    common_words(URLcontentList)
+    longest_page(URLcontentList)
+    common_words(URLcontent)
     count_domain(URLlist)
 
     urlListFile.close()
     contentFile.close()
-    contentNumFile.close()
+    URLcontentFile.close()
+
 
 
