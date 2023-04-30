@@ -1,15 +1,75 @@
-from collections import Counter
+import operator
+# from collections import Counter
 from urllib.parse import urlparse
+
+#Write a unique page function. - Alex
+#How many unique pages did you find? Uniqueness for the purposes of this assignment is ONLY established by the URL,
+# but discarding the fragment part. So, for example, http://www.ics.uci.edu#aaa and http://www.ics.uci.edu#bbb are
+# the same URL. Even if you implement additional methods for textual similarity detection, please keep considering
+# the above definition of unique pages for the purposes of counting the unique pages in this assignment.
+def unique_page(urlListFile) -> int:
+    solution = open('Solution.txt', 'a')
+    unique = set()
+    for url in urlListFile:
+        unique.add(url)
+    solution.write('1. The number of unique pages is ' + str(len(unique)) + '\n')
+    solution.close()
+
+def longest_page(URLcontentNumList):
+    solution = open('Solution.txt', 'a')
+    solution.write('2. ')
+
+    longest = 0
+    longest_page = ''
+
+    for length in range(1, len(URLcontentNumList), 2):
+        if int(URLcontentNumList[length]) > longest:
+            longest = int(URLcontentNumList[length])
+            longest_page = URLcontentNumList[length - 1]
+
+    solution.write('The longest page is ' + longest_page + 'with ' + str(longest) + ' words.' + '\n')
+    solution.close()
+
+def common_words(URLcontentList):
+    stopwords = []
+    stopwordsFile = open('stopwords.txt', 'r')
+    for line in stopwordsFile:
+        stopwords.append(line.rstrip())
+    stopwordsFile.close()
+
+    solution = open('Solution.txt', 'a')
+    solution.write('3. The 50 most common words are: \n')
+
+    wordNumDict = dict()
+    for URLcontents in URLcontentList[1::2]:
+        contents = URLcontents.split(',')
+        for content in contents:
+            word = content.lower().strip().replace("'", '')
+            if word in stopwords:
+                continue
+            if word in wordNumDict:
+                wordNumDict[word] += 1
+            else:
+                wordNumDict[word] = 1
+
+    mostCommonList = []
+    for num in range(0,50):
+        mostCommon = max(wordNumDict.items(), key = operator.itemgetter(1))[0]
+        mostCommonList.append(mostCommon)
+        wordNumDict[mostCommon] = 0
+    for word in mostCommonList:
+        solution.write(word + '\n')
+    solution.close()
 
 #Write a domain function that counts the number of subdomains.
 #How many subdomains did you find in the ics.uci.edu domain? Submit the list of subdomains ordered alphabetically
 # and the number of unique pages detected in each subdomain. The content of this list should be lines containing URL,
 # number, for example:
 #http://vision.ics.uci.edu, 10 (not the actual number here)
-def count_domain(URLListFile) -> int:
+def count_domain(urlListFile) -> int:
     solution = open('Solution.txt', 'a')
     subdomainDict = dict()
-    for url in URLListFile:
+    for url in urlListFile:
         parsed = urlparse(url)
         netloc = parsed.netloc
         netlocList = netloc.split('.')
@@ -28,44 +88,31 @@ def count_domain(URLListFile) -> int:
     solution.close()
 
 
-#Write a unique page function. - Alex
-#How many unique pages did you find? Uniqueness for the purposes of this assignment is ONLY established by the URL,
-# but discarding the fragment part. So, for example, http://www.ics.uci.edu#aaa and http://www.ics.uci.edu#bbb are
-# the same URL. Even if you implement additional methods for textual similarity detection, please keep considering
-# the above definition of unique pages for the purposes of counting the unique pages in this assignment.
-def unique_page(URLListFile) -> int:
-    solution = open('Solution.txt', 'a')
-    unique = set()
-    for url in URLListFile:
-        unique.add(url)
-    solution.write('1. The number of unique pages is ' + str(len(unique)) + '\n')
-    solution.close()
+if __name__ == '__main__':
+    urlListFile = open('URLListFile.txt', 'r')
+    contentFile = open('contentFile.txt', 'r')
+    contentNumFile = open('contentNumFile.txt', 'r')
 
-#Write the longest page function. - Vini
-#What is the longest page in terms of the number of words? (HTML markup doesn’t count as words)
-def longest_page(contentFile):
-    solution = open('Solution.txt', 'a')
+    URLlist = []
+    URLcontentList = []
+    URLcontentNumList = []
 
-    longest = 0
-    longest_page = ''
+    for line in urlListFile:
+        URLlist.append(line)
 
-    for length in range(1, len(contentFile), 2):
-        if int(contentFile[length]) > longest:
-            longest = int(contentFile[length])
-            longest_page = contentFile[length - 1]
+    for line in contentFile:
+        URLcontentList.append(line)
 
-    solution.write('2. The longest page is ' + longest_page + 'with ' + str(longest) + ' words.' + '\n')
-    solution.close()
+    for line in contentNumFile:
+        URLcontentNumList.append(line)
 
+    unique_page(URLlist)
+    longest_page(URLcontentNumList)
+    common_words(URLcontentList)
+    count_domain(URLlist)
 
+    urlListFile.close()
+    contentFile.close()
+    contentNumFile.close()
 
-#Write a common word function. - Oscar
-#What are the 50 most common words in the entire set of pages crawled under these domains ? (Ignore English stop words,
-#which can be found, for example, hereLinks to an external site.) Submit the list of common words ordered by frequency.
-def common_words(word_list) -> list:
-    frequency_list = []
-    frequency = Counter(word_list)
-    for word in frequency.most_common(50):
-        frequency_list.append(word)
-    return frequency_list
 

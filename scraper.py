@@ -51,6 +51,7 @@ def extract_next_links(url, resp):
     content = []
     total_word_count = 0
 
+
     check_URL = url
     #if the last character of URL is "/" remove it
     if url[-1] == '/':
@@ -83,8 +84,10 @@ def extract_next_links(url, resp):
                     #appends url and word count to contentFile.txt
                     with open("contentFile.txt", "a") as contentFile:
                         contentFile.write(url + '\n' + str(total_word_count) + '\n')
+                    with open("contentNumfile.txt", "a") as contentNumFile:
+                        contentNumFile.write(url + '\n' + str(len(content)) + '\n')
                     #appends url to URLListFile.txt
-                    with open("URLListFile.txt", "a") as urlListFile:
+                    with open("URLListFile.txt", "a") as urlListFile: ""
                         urlListFile.write(url + "\n")
 
                     #find all links to url
