@@ -86,12 +86,16 @@ def extract_next_links(url, resp):
                     #appends url and word count to contentFile.txt
                     with open("contentFile.txt", "a") as contentFile:
                         contentFile.write(url + '\n' + str(total_word_count) + '\n')
+                        
                     with open("URLcontentfile.txt", "a") as URLcontentFile:
                         text = soup.get_text().split()
-                        for word in text:
-                            if word.isalnum():
-                                content.append(word)
-                        URLcontentFile.write(url + '\n' + str(content) + '\n')
+                        tokens = word_tokenize(text)
+                        with open("stopwords.txt") as stopwordfile
+                            # Remove stop words
+                            stop_words = [word for word in stopwordfile]
+                            tokens = [token for token in tokens if token.lower() not in stop_words]
+                            URLcontentFile.write(url + '\n' + str(tokens) + '\n')
+                        
                     #appends url to URLListFile.txt
                     with open("URLListFile.txt", "a") as urlListFile:
                         urlListFile.write(url + "\n")
