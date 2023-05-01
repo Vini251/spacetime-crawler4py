@@ -139,8 +139,6 @@ def is_valid(url):
             re.search( #url must contain one of the domains
                 r".*\.(ics.uci.edu|cs.uci.edu|informatics.uci.edu|stat.uci.edu|"
                 + r"today.uci.edu/department/information_computer_sciences)", parsed.netloc.lower()) and \
-            not (re.search(r"\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])", parsed.path.lower()) and #remove urls that are from WICS calendar by path examination
-                 re.search(r"(wics\.)", parsed.netloc.lower())) and \
             not re.search(r"(calendar.ics.uci.edu)", parsed.netloc.lower()) and \
             not re.search(r"(replytocom=)", parsed.query.lower()) and \
             not re.search(r"(version=)", parsed.query.lower()) and \
