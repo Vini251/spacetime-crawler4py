@@ -16,14 +16,21 @@ MIN_WORD_COUNT = 150
 def tokenize(text):
     # Tokenize the text into words
     tokens = word_tokenize(text)
-    stopwordfile = open("stopwords.txt")
+    
+    # Remove non-alphabetic tokens
+    tokens = [token for token in tokens if re.match("^[a-zA-Z]+$", token)]
+    
+    # Convert tokens to lowercase
+    tokens = [token.lower() for token in tokens]
+    
     # Remove stop words
-    stop_words = [word for word in stopwordfile]
-    tokens = [token for token in tokens if token.lower() not in stop_words]
-
+    stopwordfile = open("stopwords.txt")
+    stop_words = [word.strip() for word in stopwordfile]
+    tokens = [token for token in tokens if token not in stop_words]
+    stopwordfile.close()
+    
     # Count the frequency of each token
     token_freq = nltk.FreqDist(tokens)
-    stopwordfile.close()
     return token_freq
 
 
@@ -66,7 +73,7 @@ def extract_next_links(url, resp):
         crawled_URLs.add(check_URL)
 
     #The status between 200 and 202 are good for crawling.
-    if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 202:  #Use this line for crawler
+    if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 299:  #Use this line for crawler
     #if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 202:
         with open("nextLink.txt", "a") as nextLinkFile:
 
@@ -91,9 +98,12 @@ def extract_next_links(url, resp):
                         text = soup.get_text()
                         tokens = word_tokenize(text)
                         with open("stopwords.txt") as stopwordfile:
-                            # Remove stop words
-                            stop_words = [word for word in stopwordfile]
-                            tokens = [token for token in tokens if token.lower() not in stop_words]
+                            # Remove non-alphabetic tokens
+                            tokens = [token for token in tokens if re.match("^[a-zA-Z]+$", token)]
+                            # Convert tokens to lowercase
+                            tokens = [token.lower() for token in tokens]
+                            stop_words = [word.strip() for word in stopwordfile]
+                            tokens = [token for token in tokens if token not in stop_words]
                             URLcontentFile.write(url + '\n' + str(tokens) + '\n')
                         
                     #appends url to URLListFile.txt
@@ -126,8 +136,8 @@ def is_valid(url):
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
-            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower()) and \
-            not re.search(  #remove all urls with any queries that match the ending.
+            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$|/\d+/?$|/\d{4}/\d{2}/?$", parsed.path.lower()) and \
+            not re.search(  
                r".*\.(css|js|bmp|gif|jpe?g|ico"
                + r"|png|tiff?|mid|mp2|mp3|mp4"
                + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
@@ -135,15 +145,12 @@ def is_valid(url):
                + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
                + r"|epub|dll|cnf|tgz|sha1"
                + r"|thmx|mso|arff|rtf|jar|csv"
-               + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.query.lower()) and \
-            re.search( #url must contain one of the domains
-                r".*\.(ics.uci.edu|cs.uci.edu|informatics.uci.edu|stat.uci.edu|"
-                + r"today.uci.edu/department/information_computer_sciences)", parsed.netloc.lower()) and \
+               + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$|/\d+/?$|/\d{4}/\d{2}/?$", parsed.query.lower()) and \
+            re.search(r".*\.(ics.uci.edu|cs.uci.edu|informatics.uci.edu|stat.uci.edu)", parsed.netloc.lower()) and \
             not re.search(r"(calendar.ics.uci.edu)", parsed.netloc.lower()) and \
             not re.search(r"(replytocom=)", parsed.query.lower()) and \
             not re.search(r"(version=)", parsed.query.lower()) and \
             not re.search(r"(share=)", parsed.query.lower()) and \
-            not re.search(r"(wics-hosts-a-toy-hacking-workshop-with-dr-garnet-hertz)", parsed.path.lower()) and \
             not (re.search(r"(isg\.)", parsed.netloc.lower()) and re.search(r"(action=)", parsed.query.lower())) and \
             not (re.search(r"(mt-live\.)", parsed.netloc.lower()) and re.search(r"(events)", parsed.path.lower())) and \
             not (re.search(r"(mt-live\.)", parsed.netloc.lower()) and re.search(r"(filter)", parsed.query.lower()))
