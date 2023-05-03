@@ -91,7 +91,7 @@ def count_domain(urlListFile) -> int:
 if __name__ == '__main__':
     urlListFile = open('URLListFile.txt', 'r')
     contentFile = open('contentFile.txt', 'r')
-    URLcontentFile = open('URLcontentfile', 'r')
+    URLcontentFile = open('URLcontentfile.txt', 'r')
     
 
     URLlist = []
