@@ -1,135 +1,119 @@
-1. The number of unique pages is 0
-2. The longest page is with 0 words.
+1. The number of unique pages is 5431
+2. The longest page is http://www.ics.uci.edu/~kay/wordlist.txt
+with 294131 words.
 3. The 50 most common words are: 
-1. The number of unique pages is 0
-2. The longest page is with 0 words.
-3. The 50 most common words are: 
-1. The number of unique pages is 0
-2. The longest page is with 0 words.
-3. The 50 most common words are: 
-1. The number of unique pages is 6576
-2. The longest page is with 0 words.
-3. The 50 most common words are: 
-https://www.stat.uci.edu
-https://www.stat.uci.edu/professors-nan-and-gillen-receive-1-8m-grant-to-study-statistical-methods-for-alzheimers-research
-https://www.stat.uci.edu/uci-in-top-10-on-fortunes-list-of-best-masters-in-data-science-programs
-https://www.stat.uci.edu/stephan-mandt-named-mercator-fellow
-https://www.stat.uci.edu/daniel-gillen-named-chancellors-professor
-https://www.stat.uci.edu/conference-experience-confirms-competitive-edge-of-ics-capstone-program
-https://www.stat.uci.edu/uci-ml-repository-highlights-four-impactful-projects-at-2022-ml-hackathon
-https://www.stat.uci.edu/faculty-and-staff-honored-at-annual-ics-awards-celebration
-https://www.stat.uci.edu/ics-project-expo-strengthens-industry-engagement-and-showcases-student-talent
-https://www.stat.uci.edu/uci-researchers-aim-to-diversify-clinical-research-participation-with-3-7m-nih-grant
-https://www.stat.uci.edu/qu-elected-international-statistical-institute-member
-https://www.stat.uci.edu/mds-program-hosts-panel-discussion-on-career-development-with-data-science-leaders
-https://www.stat.uci.edu/dont-think-you-can-learn-bayesian-statistics-think-again-with-bayes-rules
-https://www.stat.uci.edu/professors-berrocal-and-shahbaba-named-american-statistical-association-fellows
-https://www.stat.uci.edu/qu-named-2024-ims-medallion-lecturer
-https://www.stat.uci.edu/nsf-announces-2022-graduate-research-fellows
-https://www.stat.uci.edu/professors-utts-and-stern-honored-with-american-statistical-association-awards
-https://www.stat.uci.edu/inaugural-ics-summer-academy-on-data-analytics-now-accepting-applications
-https://www.stat.uci.edu/dr-joni-ricks-oddie-applies-data-driven-lens-in-run-for-long-beach-city-council
-https://www.stat.uci.edu/applications-open-for-new-uci-summer-biostatistics-institute-for-undergraduate-students
-https://www.stat.uci.edu/ics-graduate-programs-in-statistics-and-computer-science-among-top-20-for-public-universities
-https://www.stat.uci.edu/mds-student-ty-shao-aims-to-make-an-impact-in-healthcare
-https://www.stat.uci.edu/culture-of-collaboration-leads-to-cutting-edge-work-in-ai
-https://www.stat.uci.edu/uci-news-ucis-graduate-programs-shine-in-u-s-news-world-report-rankings
-https://www.stat.uci.edu/uci-deep-learning-researchers-advance-theory-and-practice-of-data-compression
-https://www.stat.uci.edu/uci-news-uci-researchers-receive-state-funding-to-study-pandemic-forecasting
-https://www.stat.uci.edu/university-of-california-health-and-cdph-covid-modeling-consortium-awards-grant-funding-to-further-covid-19-data-research
-https://www.stat.uci.edu/womens-history-month-resources-for-empowering-women-in-tech
-https://www.stat.uci.edu/statistics-ph-d-student-isaac-goldstein-receives-la-verne-noyes-fellowship
-https://www.stat.uci.edu/uci-announces-launch-of-institute-for-precision-health
-https://www.stat.uci.edu/black-history-month-sharing-resources-to-expand-diversity-in-tech
-https://www.stat.uci.edu/4-ics-professors-among-7-uci-researchers-named-aaas-fellows
-https://www.stat.uci.edu/xu-receives-slds-student-paper-award
-https://www.stat.uci.edu/tech-trends-for-2022
-https://www.stat.uci.edu/graduate-student-spotlight-mds-ambassador-adelynn-paik-shares-her-academic-professional-goals
-https://www.stat.uci.edu/disney-research-supports-stephan-mandts-work-on-generative-modeling-with-50000-gift
-https://www.stat.uci.edu/beyond-the-t-test-uci-professors-publish-new-statistical-guidance-for-neuroscience-research
-https://www.stat.uci.edu/statistics-ph-d-student-tianyu-pan-wins-two-competitive-awards
-https://www.stat.uci.edu/elizabeth-lee-wins-data-science-for-social-good-award
-https://www.stat.uci.edu/stephan-mandt-and-collaborators-receive-3-5-million-to-study-machine-learning-for-climate-science
-https://www.stat.uci.edu/harnessing-the-data-revolution-ics-researchers-and-collaborators-receive-1-5m-data-science-grant
-https://www.stat.uci.edu/lifetime-achievement-and-dinsdale-awards-double-the-accolades-for-professor-emerita-jessica-utts
-https://www.stat.uci.edu/uci-news-uci-led-study-finds-disparities-in-o-c-rates-of-covid-19-infection-mortality-vladimir-minin-mentioned
-https://www.stat.uci.edu/from-theory-to-practice-ucis-machine-learning-hackathon-delivers
-https://www.stat.uci.edu/choc-teams-up-with-uci-to-offer-pediatric-capstone-project-in-data-science
-https://www.stat.uci.edu/mine-dogucu-receives-young-investigator-award
-https://www.stat.uci.edu/qu-appointed-ims-program-secretary
-https://www.stat.uci.edu/the-resilience-of-the-class-of-2021
-https://www.stat.uci.edu/capstone-program-showcases-growing-talent-of-ics-students
-https://www.stat.uci.edu/a-bold-decision-to-study-abroad-in-high-school-led-sirui-hu-to-uci-and-beyond-data-science-major
-4. Subdomain num = 72
+research
+computer
+information
+student
+s
+students
+software
+ramesh
+september
+news
+graduate
+science
+engineering
+data
+will
+may
+undergraduate
+informatics
+uci
+october
+design
+events
+june
+july
+courses
+read
+department
+people
+can
+march
+projects
+november
+current
+april
+past
+books
+august
+january
+february
+december
+policies
+course
+new
+computing
+support
+faculty
+search
+contact
+school
+us
+4. Subdomain num = 64
 futurehealth.ics.uci.edu 4
-www.ics.uci.edu 850
-duttgroup.ics.uci.edu 69
-acoi.ics.uci.edu 73
-vision.ics.uci.edu 6
-cml.ics.uci.edu 170
-sdcl.ics.uci.edu 166
-stairs.ics.uci.edu 1
-mse.ics.uci.edu 2
-mswe.ics.uci.edu 9
-code.ics.uci.edu 13
+www.ics.uci.edu 715
+duttgroup.ics.uci.edu 56
+acoi.ics.uci.edu 60
+cml.ics.uci.edu 116
+sdcl.ics.uci.edu 57
+mse.ics.uci.edu 1
+mswe.ics.uci.edu 7
+code.ics.uci.edu 12
 malek.ics.uci.edu 1
-seal.ics.uci.edu 6
-jgarcia.ics.uci.edu 6
-accessibility.ics.uci.edu 1
+seal.ics.uci.edu 2
 evoke.ics.uci.edu 3
 mondego.ics.uci.edu 3
 frost.ics.uci.edu 1
 sourcerer.ics.uci.edu 1
 luci.ics.uci.edu 3
-transformativeplay.ics.uci.edu 43
+tad.ics.uci.edu 1
+transformativeplay.ics.uci.edu 19
 wearablegames.ics.uci.edu 9
-hai.ics.uci.edu 1
+wics.ics.uci.edu 522
+plrg.ics.uci.edu 13
+emj.ics.uci.edu 20
+computableplant.ics.uci.edu 4
 perennialpolycultures.ics.uci.edu 1
-plrg.ics.uci.edu 15
-nalini.ics.uci.edu 3
-cert.ics.uci.edu 2
-isg.ics.uci.edu 179
-wics.ics.uci.edu 684
-cwicsocal18.ics.uci.edu 6
-hpi.ics.uci.edu 3
-mhcid.ics.uci.edu 12
-mcs.ics.uci.edu 72
-emj.ics.uci.edu 28
-computableplant.ics.uci.edu 12
-cbcl.ics.uci.edu 3
-iasl.ics.uci.edu 15
-graphics.ics.uci.edu 1
+hai.ics.uci.edu 1
+create.ics.uci.edu 6
+grape.ics.uci.edu 63
+sli.ics.uci.edu 59
+wiki.ics.uci.edu 1
+archive.ics.uci.edu 3
+hpi.ics.uci.edu 2
+isg.ics.uci.edu 155
+iasl.ics.uci.edu 11
 asterix.ics.uci.edu 4
-flamingo.ics.uci.edu 9
-psearch.ics.uci.edu 1
-www-db.ics.uci.edu 4
-ngs.ics.uci.edu 1900
-grape.ics.uci.edu 68
+flamingo.ics.uci.edu 8
+fr.ics.uci.edu 2
+www-db.ics.uci.edu 3
+ngs.ics.uci.edu 1683
 tastier.ics.uci.edu 1
 ipubmed.ics.uci.edu 1
 sherlock.ics.uci.edu 1
+cert.ics.uci.edu 2
 xtune.ics.uci.edu 2
 esl.ics.uci.edu 1
-i-sensorium.ics.uci.edu 1
-fr.ics.uci.edu 2
-tad.ics.uci.edu 1
-create.ics.uci.edu 7
-sli.ics.uci.edu 207
-wiki.ics.uci.edu 1
-archive.ics.uci.edu 3
-cradl.ics.uci.edu 17
+cradl.ics.uci.edu 12
 riscit.ics.uci.edu 1
+mhcid.ics.uci.edu 10
 informatics.ics.uci.edu 1
 redmiles.ics.uci.edu 4
 graphmod.ics.uci.edu 1
 studentcouncil.ics.uci.edu 1
+cbcl.ics.uci.edu 2
 cyberclub.ics.uci.edu 1
 chenli.ics.uci.edu 3
 hobbes.ics.uci.edu 1
 ipf.ics.uci.edu 1
-unite.ics.uci.edu 7
+mcs.ics.uci.edu 50
+unite.ics.uci.edu 5
+vision.ics.uci.edu 1
 statconsulting.ics.uci.edu 3
 aiclub.ics.uci.edu 1
-dgillen.ics.uci.edu 19
+dgillen.ics.uci.edu 13
 mdogucu.ics.uci.edu 1
-mds.ics.uci.edu 17
+mds.ics.uci.edu 14
