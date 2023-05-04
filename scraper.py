@@ -147,14 +147,8 @@ def is_valid(url):
                + r"|thmx|mso|arff|rtf|jar|csv"
                + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.query.lower()) and \
             re.search(r".*\.(ics.uci.edu|cs.uci.edu|informatics.uci.edu|stat.uci.edu)", parsed.netloc.lower()) and \
-            not re.search(r"(calendar.ics.uci.edu)", parsed.netloc.lower()) and \
-            not re.search(r"(replytocom=)", parsed.query.lower()) and \
-            not re.search(r"(version=)", parsed.query.lower()) and \
-            not re.search(r"(share=)", parsed.query.lower()) and \
-            not (re.search(r"(isg\.)", parsed.netloc.lower()) and re.search(r"(action=)", parsed.query.lower())) and \
-            not (re.search(r"(mt-live\.)", parsed.netloc.lower()) and re.search(r"(events)", parsed.path.lower())) and \
-            not (re.search(r"(mt-live\.)", parsed.netloc.lower()) and re.search(r"(filter)", parsed.query.lower()))
-
+            not re.search(r"(calendar.ics.uci.edu)", parsed.netloc.lower())
+            
 
     except TypeError:
         print("TypeError for ", parsed)
