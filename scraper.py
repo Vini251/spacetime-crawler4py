@@ -40,17 +40,13 @@ def scraper(url, resp):
     return [link for link in links if is_valid(link)]
 
 #detects crawler traps
-def trap_detection(soup):
-    global all_website_hash
-    hash = hashlib.md5()
-    #updates hash value for every key in tokenized_words
-    hash.update(soup.getText().encode())
-    #checks to see if hash value is in all_website_hash
-    if(hash.hexdigest() in all_website_hash):
-        return False  
-    else:
-        all_website_hash.append(hash.hexdigest())  
-        return True
+def trap_detection(url, threshold):
+    parsed_url = urlparse(url)
+    path_segments = parsed_url.path.strip('/').split('/')
+    for i in range(len(path_segments)-threshold+1):
+        if len(set(path_segments[i:i+threshold])) == 1:
+            return True
+    return False
 
         
     
@@ -74,53 +70,52 @@ def extract_next_links(url, resp):
         crawled_URLs.add(check_URL)
 
     #The status between 200 and 202 are good for crawling.
-    if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 299:  #Use this line for crawler
+    if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 299 and trap_detection == False:  #Use this line for crawler
     #if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 202:
-        with open("nextLink.txt", "a") as nextLinkFile:
+        html_doc = resp.raw_response.content    #use this line for crawler
+        #html_doc = resp.content
+        soup = BeautifulSoup(html_doc, 'html.parser')
+        #checks to see if hash_value already exists in all_website_hash
+        #tokenize function
+        if(trap_detection(soup)):
+            content_tokenized = tokenize(soup.getText())
+            #print(content_tokenized)
+            #adds up total word cord from URL
+            for value in content_tokenized.values():
+                total_word_count+=value
+        #checks word count
+            if(total_word_count >= MIN_WORD_COUNT):
+                #appends url and word count to contentFile.txt
+                with open("contentFile.txt", "a") as contentFile:
+                    contentFile.write(url + '\n' + str(total_word_count) + '\n')
 
-            html_doc = resp.raw_response.content    #use this line for crawler
-            #html_doc = resp.content
-            soup = BeautifulSoup(html_doc, 'html.parser')
-            #checks to see if hash_value already exists in all_website_hash
-            #tokenize function
-            if(trap_detection(soup)):
-                content_tokenized = tokenize(soup.getText())
-                #print(content_tokenized)
-                #adds up total word cord from URL
-                for value in content_tokenized.values():
-                    total_word_count+=value
-            #checks word count
-                if(total_word_count >= MIN_WORD_COUNT):
-                    #appends url and word count to contentFile.txt
-                    with open("contentFile.txt", "a") as contentFile:
-                        contentFile.write(url + '\n' + str(total_word_count) + '\n')
+                with open("URLcontentfile.txt", "a") as URLcontentFile:
+                    text = soup.get_text()
+                    tokens = word_tokenize(text)
+                    with open("stopwords.txt") as stopwordfile:
+                        # Remove non-alphabetic tokens
+                        tokens = [token for token in tokens if re.match("^[a-zA-Z]+$", token)]
+                        # Convert tokens to lowercase
+                        tokens = [token.lower() for token in tokens]
+                        stop_words = [word.strip() for word in stopwordfile]
+                        tokens = [token for token in tokens if token not in stop_words]
+                        URLcontentFile.write(url + '\n' + str(tokens) + '\n')
+                    
+                #appends url to URLListFile.txt
+                with open("URLListFile.txt", "a") as urlListFile:
+                    urlListFile.write(url + "\n")
 
-                    with open("URLcontentfile.txt", "a") as URLcontentFile:
-                        text = soup.get_text()
-                        tokens = word_tokenize(text)
-                        with open("stopwords.txt") as stopwordfile:
-                            # Remove non-alphabetic tokens
-                            tokens = [token for token in tokens if re.match("^[a-zA-Z]+$", token)]
-                            # Convert tokens to lowercase
-                            tokens = [token.lower() for token in tokens]
-                            stop_words = [word.strip() for word in stopwordfile]
-                            tokens = [token for token in tokens if token not in stop_words]
-                            URLcontentFile.write(url + '\n' + str(tokens) + '\n')
-                        
-                    #appends url to URLListFile.txt
-                    with open("URLListFile.txt", "a") as urlListFile:
-                        urlListFile.write(url + "\n")
-
-                    #find all links to url
-                    for link in soup.find_all('a'):
-                        urlLink = link.get('href')
-                        if urlLink == None:
-                            continue
-                        if urlLink.find("#") != -1:
-                            urlLink = urlLink[:urlLink.find("#")]
-                        absolute = urljoin(url, urlLink)
+                #find all links to url
+                for link in soup.find_all('a'):
+                    urlLink = link.get('href')
+                    if urlLink == None:
+                        continue
+                    if urlLink.find("#") != -1:
+                        urlLink = urlLink[:urlLink.find("#")]
+                    absolute = urljoin(url, urlLink)
+                    if trap_detection(absolute, 3) == False:
                         linkList.append(absolute)
-                        nextLinkFile.write(absolute + "\n")
+                        
 
     return linkList
 
