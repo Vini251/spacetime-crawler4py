@@ -41,15 +41,7 @@ def scraper(url, resp):
     return [link for link in links if is_valid(link)]
 
 #detects crawler traps
-def trap_detection(url, threshold):
-    parsed_url = urlparse(url)
-    path_segments = parsed_url.path.strip('/').split('/')
-    path_set = set(path_segments)
-    path_length = len(path_segments) - len(path_set)
-    if(path_length >= threshold):
-        return True
-    else:
-        return False
+
 
 def check_duplicate(soup):
     soup_simhash = Simhash(soup.text)
@@ -82,7 +74,7 @@ def extract_next_links(url, resp):
         crawled_URLs.add(check_URL)
 
     #The status between 200 and 202 are good for crawling.
-    if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 299 and trap_detection(url, 1) == False:  #Use this line for crawler
+    if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 299:  #Use this line for crawler
     #if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 202:
         
         html_doc = resp.raw_response.content    #use this line for crawler
