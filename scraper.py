@@ -3,15 +3,19 @@ from urllib.parse import urlparse
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 import nltk
-from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-import hashlib
+from simhash import Simhash
+from urllib.request import urlopen
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
 
 
 crawled_URLs = set()
 #hash values on all websites
 all_website_hash = []
-MIN_WORD_COUNT = 150
+MIN_WORD_COUNT = 150 
+
 
 
 def tokenize(text):
@@ -50,18 +54,21 @@ def trap_detection(url, threshold):
     else:
         return False
 
-def check_duplicate(soup):
-    global all_website_hash
-    hash = hashlib.md5()
-    #updates hash value for every key in tokenized_words
-    hash.update(soup.getText().encode())
-    #checks to see if hash value is in all_website_hash
-    if(hash.hexdigest() in all_website_hash):
-        return False  
-    else:
-        all_website_hash.append(hash.hexdigest())  
-        return True
+def check_duplicate(current_text, previous_text, threshold = 5):
+    current_hash = Simhash(current_text)
+    previous_hash = Simhash(previous_text)
 
+    # Calculate the Hamming distance between the current and previous hashes
+    distance = current_hash.distance(previous_hash)
+    print(distance)
+
+    # Check if the distance is below the threshold
+    if distance <= threshold:
+        return True
+    else:
+        return False
+
+    
         
     
 def extract_next_links(url, resp):
@@ -86,6 +93,7 @@ def extract_next_links(url, resp):
     #The status between 200 and 202 are good for crawling.
     if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 299 and trap_detection(url, 1) == False:  #Use this line for crawler
     #if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 202:
+        
         html_doc = resp.raw_response.content    #use this line for crawler
         #html_doc = resp.content
         soup = BeautifulSoup(html_doc, 'html.parser')
@@ -174,3 +182,5 @@ def is_valid(url):
 # for links in link:
 #     print(links)
 # print(len(link))
+
+#                                          v   
