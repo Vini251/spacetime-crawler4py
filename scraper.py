@@ -1,5 +1,6 @@
 import re
 from urllib.parse import urlparse
+from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 import nltk
 from nltk.corpus import stopwords
@@ -115,11 +116,11 @@ def extract_next_links(url, resp):
                         urlLink = link.get('href')
                         if urlLink == None:
                             continue
-                        if(urlLink not in linkList) and is_valid(urlLink):
-                            if urlLink.find("#") != -1:
-                                urlLink = urlLink[:urlLink.find("#")]
-                            linkList.append(urlLink)
-                            nextLinkFile.write(urlLink + "\n")
+                        if urlLink.find("#") != -1:
+                            urlLink = urlLink[:urlLink.find("#")]
+                        absolute = urljoin(url, urlLink)
+                        linkList.append(absolute)
+                        nextLinkFile.write(absolute + "\n")
 
     return linkList
 
@@ -166,4 +167,3 @@ def is_valid(url):
 # for links in link:
 #     print(links)
 # print(len(link))
-
