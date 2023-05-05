@@ -4,11 +4,16 @@ from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 import nltk
 from nltk.tokenize import word_tokenize
+<<<<<<< HEAD
 from simhash import Simhash
 from urllib.request import urlopen
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+=======
+import hashlib
+from sklearn.metrics.pairwise import cosine_similarity
+>>>>>>> d5ba203aed92aec6f665255ef0b69284f2163400
 
 
 crawled_URLs = set()
