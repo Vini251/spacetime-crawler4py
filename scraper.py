@@ -4,16 +4,8 @@ from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 import nltk
 from nltk.tokenize import word_tokenize
-<<<<<<< HEAD
 from simhash import Simhash
-from urllib.request import urlopen
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
-import numpy as np
-=======
-import hashlib
-from sklearn.metrics.pairwise import cosine_similarity
->>>>>>> d5ba203aed92aec6f665255ef0b69284f2163400
+
 
 
 crawled_URLs = set()
@@ -104,43 +96,46 @@ def extract_next_links(url, resp):
         soup = BeautifulSoup(html_doc, 'html.parser')
         #checks to see if hash_value already exists in all_website_hash
         #tokenize function
-        if(check_duplicate(soup)):
-            content_tokenized = tokenize(soup.getText())
-            #print(content_tokenized)
-            #adds up total word cord from URL
-            for value in content_tokenized.values():
-                total_word_count+=value
-        #checks word count
-            if(total_word_count >= MIN_WORD_COUNT):
-                #appends url and word count to contentFile.txt
-                with open("contentFile.txt", "a") as contentFile:
-                    contentFile.write(url + '\n' + str(total_word_count) + '\n')
+        for i in all_website_hash:
+            if(Simhash(soup.text).distance(i) >= 5):
+                all_website_hash.append(Simhash(soup.text))
+                content_tokenized = tokenize(soup.getText())
+                #print(content_tokenized)
+                #adds up total word cord from URL
+                for value in content_tokenized.values():
+                    total_word_count+=value
+            #checks word count
+                if(total_word_count >= MIN_WORD_COUNT):
+                    #appends url and word count to contentFile.txt
+                    with open("contentFile.txt", "a") as contentFile:
+                        contentFile.write(url + '\n' + str(total_word_count) + '\n')
 
-                with open("URLcontentfile.txt", "a") as URLcontentFile:
-                    text = soup.get_text()
-                    tokens = word_tokenize(text)
-                    with open("stopwords.txt") as stopwordfile:
-                        # Remove non-alphabetic tokens
-                        tokens = [token for token in tokens if re.match("^[a-zA-Z]+$", token)]
-                        # Convert tokens to lowercase
-                        tokens = [token.lower() for token in tokens]
-                        stop_words = [word.strip() for word in stopwordfile]
-                        tokens = [token for token in tokens if token not in stop_words]
-                        URLcontentFile.write(url + '\n' + str(tokens) + '\n')
-                    
-                #appends url to URLListFile.txt
-                with open("URLListFile.txt", "a") as urlListFile:
-                    urlListFile.write(url + "\n")
+                    with open("URLcontentfile.txt", "a") as URLcontentFile:
+                        text = soup.get_text()
+                        tokens = word_tokenize(text)
+                        with open("stopwords.txt") as stopwordfile:
+                            # Remove non-alphabetic tokens
+                            tokens = [token for token in tokens if re.match("^[a-zA-Z]+$", token)]
+                            # Convert tokens to lowercase
+                            tokens = [token.lower() for token in tokens]
+                            stop_words = [word.strip() for word in stopwordfile]
+                            tokens = [token for token in tokens if token not in stop_words]
+                            URLcontentFile.write(url + '\n' + str(tokens) + '\n')
+                        
+                    #appends url to URLListFile.txt
+                    with open("URLListFile.txt", "a") as urlListFile:
+                        urlListFile.write(url + "\n")
 
-                #find all links to url
-                for link in soup.find_all('a'):
-                    urlLink = link.get('href')
-                    if urlLink == None:
-                        continue
-                    if urlLink.find("#") != -1:
-                        urlLink = urlLink[:urlLink.find("#")]
-                    absolute = urljoin(url, urlLink)
-                    linkList.append(absolute)
+                    #find all links to url
+                    for link in soup.find_all('a'):
+                        urlLink = link.get('href')
+                        if urlLink == None:
+                            continue
+                        if urlLink.find("#") != -1:
+                            urlLink = urlLink[:urlLink.find("#")]
+                        absolute = urljoin(url, urlLink)
+                        linkList.append(absolute)
+                
 
     return linkList
 
