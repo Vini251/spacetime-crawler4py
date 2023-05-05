@@ -6,6 +6,7 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import hashlib
+from sklearn.metrics.pairwise import cosine_similarity
 
 
 crawled_URLs = set()
