@@ -70,14 +70,14 @@ def extract_next_links(url, resp):
         crawled_URLs.add(check_URL)
 
     #The status between 200 and 202 are good for crawling.
-    if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 299 and trap_detection == False:  #Use this line for crawler
-    #if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 202:
+    if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 299 and trap_detection(url,3) == False:  #Use this line for crawler
+    #if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 202 and trap_detection(url, 3) == False:
         html_doc = resp.raw_response.content    #use this line for crawler
         #html_doc = resp.content
         soup = BeautifulSoup(html_doc, 'html.parser')
         #checks to see if hash_value already exists in all_website_hash
         #tokenize function
-        if(trap_detection(soup)):
+        if(trap_detection(url,3) == False):
             content_tokenized = tokenize(soup.getText())
             #print(content_tokenized)
             #adds up total word cord from URL
