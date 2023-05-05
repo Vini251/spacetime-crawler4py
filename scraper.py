@@ -43,10 +43,24 @@ def scraper(url, resp):
 def trap_detection(url, threshold):
     parsed_url = urlparse(url)
     path_segments = parsed_url.path.strip('/').split('/')
-    for i in range(len(path_segments)-threshold+1):
-        if len(set(path_segments[i:i+threshold])) == 1:
-            return True
-    return False
+    path_set = set(path_segments)
+    path_length = len(path_segments) - len(path_set)
+    if(path_length >= threshold):
+        return True
+    else:
+        return False
+
+def check_duplicate(soup):
+    global all_website_hash
+    hash = hashlib.md5()
+    #updates hash value for every key in tokenized_words
+    hash.update(soup.getText().encode())
+    #checks to see if hash value is in all_website_hash
+    if(hash.hexdigest() in all_website_hash):
+        return False  
+    else:
+        all_website_hash.append(hash.hexdigest())  
+        return True
 
         
     
@@ -70,14 +84,14 @@ def extract_next_links(url, resp):
         crawled_URLs.add(check_URL)
 
     #The status between 200 and 202 are good for crawling.
-    if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 299 and trap_detection(url,3) == False:  #Use this line for crawler
-    #if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 202 and trap_detection(url, 3) == False:
+    if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 299 and trap_detection(url, 1) == False:  #Use this line for crawler
+    #if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 202:
         html_doc = resp.raw_response.content    #use this line for crawler
         #html_doc = resp.content
         soup = BeautifulSoup(html_doc, 'html.parser')
         #checks to see if hash_value already exists in all_website_hash
         #tokenize function
-        if(trap_detection(url,3) == False):
+        if(check_duplicate(soup)):
             content_tokenized = tokenize(soup.getText())
             #print(content_tokenized)
             #adds up total word cord from URL
@@ -113,9 +127,7 @@ def extract_next_links(url, resp):
                     if urlLink.find("#") != -1:
                         urlLink = urlLink[:urlLink.find("#")]
                     absolute = urljoin(url, urlLink)
-                    if trap_detection(absolute, 3) == False:
-                        linkList.append(absolute)
-                        
+                    linkList.append(absolute)
 
     return linkList
 
