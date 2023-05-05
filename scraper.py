@@ -5,9 +5,8 @@ from bs4 import BeautifulSoup
 import nltk
 from nltk.tokenize import word_tokenize
 from simhash import Simhash
-import requests
 
-import sys
+
 
 crawled_URLs = set()
 #hash values on all websites
@@ -41,41 +40,33 @@ def scraper(url, resp):
     links = extract_next_links(url, resp)
     return [link for link in links if is_valid(link)]
 
-# #detects crawler traps
-# def trap_detection(url, threshold):
-#     parsed_url = urlparse(url)
-#     path_segments = parsed_url.path.strip('/').split('/')
-#     path_set = set(path_segments)
-#     path_length = len(path_segments) - len(path_set)
-#     if(path_length >= threshold):
-#         return True
-#     else:
-#         return False
+#detects crawler traps
+def trap_detection(url, threshold):
+    parsed_url = urlparse(url)
+    path_segments = parsed_url.path.strip('/').split('/')
+    path_set = set(path_segments)
+    path_length = len(path_segments) - len(path_set)
+    if(path_length >= threshold):
+        return True
+    else:
+        return False
 
-# def check_duplicate(current_text, previous_text, threshold = 5):
-#     current_hash = Simhash(current_text)
-#     previous_hash = Simhash(previous_text)
-
-#     # Calculate the Hamming distance between the current and previous hashes
-#     distance = current_hash.distance(previous_hash)
-#     print(distance)
-
-#     # Check if the distance is below the threshold
-#     if distance <= threshold:
-#         return True
-#     else:
-#         return False
+def check_duplicate(soup):
+    soup_simhash = Simhash(soup.text)
+    for shash in all_website_hash:
+        if(soup_simhash.distance(shash) <= 5):
+            return True
+    all_website_hash.append(soup_simhash)
+    return False
 
     
         
     
 def extract_next_links(url, resp):
-    global all_website_hash
     linkList = []
     crawled = False
     content = []
     total_word_count = 0
-    new_hashes = []
 
 
     check_URL = url
@@ -91,59 +82,54 @@ def extract_next_links(url, resp):
         crawled_URLs.add(check_URL)
 
     #The status between 200 and 202 are good for crawling.
-    #if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 299:  #Use this line for crawler
-    if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 299:
+    if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 299 and trap_detection(url, 1) == False:  #Use this line for crawler
+    #if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 202:
         
-        #html_doc = resp.raw_response.content    #use this line for crawler
-        html_doc = resp.content
+        html_doc = resp.raw_response.content    #use this line for crawler
+        #html_doc = resp.content
         soup = BeautifulSoup(html_doc, 'html.parser')
         #checks to see if hash_value already exists in all_website_hash
+        #tokenize function
+        
+        if(check_duplicate(soup) == False):
+            all_website_hash.append(Simhash(soup.text))
+            content_tokenized = tokenize(soup.getText())
+            #print(content_tokenized)
+            #adds up total word cord from URL
+            for value in content_tokenized.values():
+                total_word_count+=value
+        #checks word count
+            if(total_word_count >= MIN_WORD_COUNT):
+                #appends url and word count to contentFile.txt
+                with open("contentFile.txt", "a") as contentFile:
+                    contentFile.write(url + '\n' + str(total_word_count) + '\n')
 
-        print("hello")
-        for i in all_website_hash:
-            print("hello")
-            if(Simhash(soup.text).distance(i) >= 5):
-                print("hello")
-                new_hashes.append(Simhash(soup.text))
+                with open("URLcontentfile.txt", "a") as URLcontentFile:
+                    text = soup.get_text()
+                    tokens = word_tokenize(text)
+                    with open("stopwords.txt") as stopwordfile:
+                        # Remove non-alphabetic tokens
+                        tokens = [token for token in tokens if re.match("^[a-zA-Z]+$", token)]
+                        # Convert tokens to lowercase
+                        tokens = [token.lower() for token in tokens]
+                        stop_words = [word.strip() for word in stopwordfile]
+                        tokens = [token for token in tokens if token not in stop_words]
+                        URLcontentFile.write(url + '\n' + str(tokens) + '\n')
+                    
+                #appends url to URLListFile.txt
+                with open("URLListFile.txt", "a") as urlListFile:
+                    urlListFile.write(url + "\n")
 
-                content_tokenized = tokenize(soup.getText())
-                #print(content_tokenized)
-
-                #adds up total word cord from URL
-                for value in content_tokenized.values():
-                    total_word_count+=value
-            #checks word count
-                if(total_word_count >= MIN_WORD_COUNT):
-                    #appends url and word count to contentFile.txt
-                    with open("contentFile.txt", "a") as contentFile:
-                        contentFile.write(url + '\n' + str(total_word_count) + '\n')
-
-                    with open("URLcontentfile.txt", "a") as URLcontentFile:
-                        text = soup.get_text()
-                        tokens = word_tokenize(text)
-                        with open("stopwords.txt") as stopwordfile:
-                            # Remove non-alphabetic tokens
-                            tokens = [token for token in tokens if re.match("^[a-zA-Z]+$", token)]
-                            # Convert tokens to lowercase
-                            tokens = [token.lower() for token in tokens]
-                            stop_words = [word.strip() for word in stopwordfile]
-                            tokens = [token for token in tokens if token not in stop_words]
-                            URLcontentFile.write(url + '\n' + str(tokens) + '\n')
-                        
-                    #appends url to URLListFile.txt
-                    with open("URLListFile.txt", "a") as urlListFile:
-                        urlListFile.write(url + "\n")
-
-                    #find all links to url
-                    for link in soup.find_all('a'):
-                        urlLink = link.get('href')
-                        if urlLink == None:
-                            continue
-                        if urlLink.find("#") != -1:
-                            urlLink = urlLink[:urlLink.find("#")]
-                        absolute = urljoin(url, urlLink)
-                        linkList.append(absolute)
-            all_website_hash += new_hashes
+                #find all links to url
+                for link in soup.find_all('a'):
+                    urlLink = link.get('href')
+                    if urlLink == None:
+                        continue
+                    if urlLink.find("#") != -1:
+                        urlLink = urlLink[:urlLink.find("#")]
+                    absolute = urljoin(url, urlLink)
+                    linkList.append(absolute)
+                
 
     return linkList
 
@@ -182,16 +168,13 @@ def is_valid(url):
 
 
 
-URL = "http://www.stat.uci.edu"
-response = requests.get(URL)
-#print(tokenize(URL))
-soup = BeautifulSoup(response.content, "html.parser")
-all_website_hash.append(Simhash(soup.text))
+# URL = "http://www.stat.uci.edu"
+# response = requests.get(URL)
+# #print(tokenize(URL))
 
-link = scraper(URL, response)
-for links in link:
-    print(links)
-print(len(link))
+# link = scraper(URL, response)
+# for links in link:
+#     print(links)
+# print(len(link))
 
-
-
+#   
