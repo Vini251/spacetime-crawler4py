@@ -15,6 +15,7 @@ MIN_WORD_COUNT = 150
 
 
 def tokenize(text):
+    """This function takes in the text of the html content and tokenize the text with specific stopwords incorportated."""
     # Tokenize the text into words
     tokens = word_tokenize(text)
     
