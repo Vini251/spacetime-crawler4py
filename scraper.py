@@ -6,13 +6,12 @@ import nltk
 from nltk.tokenize import word_tokenize
 from simhash import Simhash
 
-
-
+#set that keeps track of all the urls crawled till now
 crawled_URLs = set()
 #hash values on all websites
 all_website_hash = []
+#min word count for low value urls
 MIN_WORD_COUNT = 150 
-
 
 
 def tokenize(text):
@@ -37,14 +36,15 @@ def tokenize(text):
 
 
 def scraper(url, resp):
+    """Scraper function return the list of links found in the url to the frontier for it to crawl next"""
     links = extract_next_links(url, resp)
     return [link for link in links if is_valid(link)]
 
-#detects crawler traps
-
 
 def check_duplicate(soup):
+    """detects crawler traps using simhash to get the similarity of the text of the urls"""
     soup_simhash = Simhash(soup.text)
+    #Loop through the list of all hash values of the previous urls and check if the difference is less than 5. If it is discard the url, if not then move to extract_next_link().
     for shash in all_website_hash:
         if(soup_simhash.distance(shash) <= 5):
             return True
@@ -52,14 +52,11 @@ def check_duplicate(soup):
     return False
 
     
-        
-    
 def extract_next_links(url, resp):
+    """This function takes in 2 arguments url and response of url. This is function returns the list of links that it found from the the html content of the url given to it."""
     linkList = []
     crawled = False
-    content = []
     total_word_count = 0
-
 
     check_URL = url
     #if the last character of URL is "/" remove it
@@ -74,28 +71,29 @@ def extract_next_links(url, resp):
         crawled_URLs.add(check_URL)
 
     #The status between 200 and 202 are good for crawling.
-    if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 299:  #Use this line for crawler
-    #if crawled == False and is_valid(url) and resp.status_code >= 200 and resp.status_code <= 202:
+    if crawled == False and is_valid(url) and resp.status >= 200 and resp.status <= 299:  
         
-        html_doc = resp.raw_response.content    #use this line for crawler
-        #html_doc = resp.content
+        #get the html doc of the response and apply Beautiful soup to parse the html content
+        html_doc = resp.raw_response.content    
         soup = BeautifulSoup(html_doc, 'html.parser')
-        #checks to see if hash_value already exists in all_website_hash
-        #tokenize function
-        
+
+        #checks to see if hash_value already exists in all_website_hash. "False" meaning this link is unique and is not similar to previous links    
         if(check_duplicate(soup) == False):
-            all_website_hash.append(Simhash(soup.text))
+
+            #tokenize the content of the soup
             content_tokenized = tokenize(soup.getText())
-            #print(content_tokenized)
+        
             #adds up total word cord from URL
             for value in content_tokenized.values():
                 total_word_count+=value
-        #checks word count
+                
+            #checks word count
             if(total_word_count >= MIN_WORD_COUNT):
                 #appends url and word count to contentFile.txt
                 with open("contentFile.txt", "a") as contentFile:
                     contentFile.write(url + '\n' + str(total_word_count) + '\n')
 
+                #Append the urls and the content on tokenized form to file.
                 with open("URLcontentfile.txt", "a") as URLcontentFile:
                     text = soup.get_text()
                     tokens = word_tokenize(text)
@@ -112,7 +110,7 @@ def extract_next_links(url, resp):
                 with open("URLListFile.txt", "a") as urlListFile:
                     urlListFile.write(url + "\n")
 
-                #find all links to url
+                #find all links that are present in the html content of the current url
                 for link in soup.find_all('a'):
                     urlLink = link.get('href')
                     if urlLink == None:
@@ -121,19 +119,27 @@ def extract_next_links(url, resp):
                         urlLink = urlLink[:urlLink.find("#")]
                     absolute = urljoin(url, urlLink)
                     linkList.append(absolute)
-                
-
     return linkList
 
+
 def is_valid(url):
+    """This function checks for the validity of the url that is passed to it as argument."""
     try:
         parsed = urlparse(url)
+        #The url should have the scheme of these two or else is not accepted
         if parsed.scheme not in set(["http", "https"]):
             return False
+        
+        #If the url contains "format=" discard it
+        if "format=" in url:
+            return False
+
+        #This part checks with the url ends with one of these extensions or does it contain these parts in the url. if it does return False.
+        #This also checks if the domain is in the 4 main given domains or not
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
-            + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
+            + r"|wav|avi|mov|mpeg|mpg|ram|m4v|mkv|ogg|ogv|pdf"
             + r"|ps|eps|tex|ppt|ppsx|pptx|doc|docx|xls|xlsx|names"
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
@@ -142,16 +148,16 @@ def is_valid(url):
             not re.search(  
                r".*\.(css|js|bmp|gif|jpe?g|ico"
                + r"|png|tiff?|mid|mp2|mp3|mp4"
-               + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
+               + r"|wav|avi|mov|mpeg|mpg|ram|m4v|mkv|ogg|ogv|pdf"
                + r"|ps|eps|tex|ppt|ppsx|pptx|doc|docx|xls|xlsx|names"
                + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
                + r"|epub|dll|cnf|tgz|sha1"
                + r"|thmx|mso|arff|rtf|jar|csv"
                + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.query.lower()) and \
             re.search(r".*\.(ics.uci.edu|cs.uci.edu|informatics.uci.edu|stat.uci.edu)", parsed.netloc.lower()) and \
-            not re.search(r"(calendar.ics.uci.edu)", parsed.netloc.lower())
-            
+            not re.search(r"(calendar.ics.uci.edu)", parsed.netloc.lower()) 
 
+    #If there is a type error print this line
     except TypeError:
         print("TypeError for ", parsed)
         raise
@@ -159,7 +165,7 @@ def is_valid(url):
 
 
 
-
+#TESTING
 # URL = "http://www.stat.uci.edu"
 # response = requests.get(URL)
 # #print(tokenize(URL))
@@ -168,5 +174,3 @@ def is_valid(url):
 # for links in link:
 #     print(links)
 # print(len(link))
-
-#   

@@ -1,119 +1,128 @@
-1. The number of unique pages is 5431
+1. The number of unique pages is 6894
 2. The longest page is http://www.ics.uci.edu/~kay/wordlist.txt
 with 294131 words.
 3. The 50 most common words are: 
+data
 research
 computer
-information
-student
 s
-students
-software
-ramesh
-september
-news
-graduate
-science
-engineering
-data
-will
-may
-undergraduate
-informatics
+information
 uci
-october
-design
-events
-june
-july
-courses
-read
-department
-people
-can
-march
-projects
-november
-current
-april
-past
-books
-august
-january
-february
-december
-policies
-course
-new
-computing
-support
-faculty
-search
-contact
+students
+science
+will
+ics
 school
+can
+news
+p
+policies
+bren
+contact
+events
+student
+set
+software
+learning
+new
+graduate
+computing
+one
+l
+faculty
+r
+university
+time
+systems
+academic
+people
+engineering
+may
+m
+course
+support
+undergraduate
+donald
 us
-4. Subdomain num = 64
-futurehealth.ics.uci.edu 4
-www.ics.uci.edu 715
-duttgroup.ics.uci.edu 56
-acoi.ics.uci.edu 60
-cml.ics.uci.edu 116
-sdcl.ics.uci.edu 57
-mse.ics.uci.edu 1
+also
+informatics
+design
+n
+year
+number
+use
+f
+4. Subdomain num = 73
+www.ics.uci.edu 2196
+sdcl.ics.uci.edu 61
+mse.ics.uci.edu 3
 mswe.ics.uci.edu 7
 code.ics.uci.edu 12
+sli.ics.uci.edu 56
+archive.ics.uci.edu 911
+aiclub.ics.uci.edu 1
+ieee.ics.uci.edu 1
+industryshowcase.ics.uci.edu 17
 malek.ics.uci.edu 1
-seal.ics.uci.edu 2
+seal.ics.uci.edu 34
+vision.ics.uci.edu 1
+cbcl.ics.uci.edu 11
+motifmap.ics.uci.edu 2
+motifmap-rna.ics.uci.edu 2
+ipubmed.ics.uci.edu 1
+hobbes.ics.uci.edu 6
+isg.ics.uci.edu 138
 evoke.ics.uci.edu 3
-mondego.ics.uci.edu 3
+transformativeplay.ics.uci.edu 16
+wearablegames.ics.uci.edu 5
+futurehealth.ics.uci.edu 71
+wics.ics.uci.edu 317
+create.ics.uci.edu 6
+grape.ics.uci.edu 255
+wiki.ics.uci.edu 1
+hpi.ics.uci.edu 2
+acoi.ics.uci.edu 59
+chenli.ics.uci.edu 8
+flamingo.ics.uci.edu 5
+tastier.ics.uci.edu 1
+asterix.ics.uci.edu 5
+fr.ics.uci.edu 2
+luci.ics.uci.edu 3
+mondego.ics.uci.edu 2
 frost.ics.uci.edu 1
 sourcerer.ics.uci.edu 1
-luci.ics.uci.edu 3
-tad.ics.uci.edu 1
-transformativeplay.ics.uci.edu 19
-wearablegames.ics.uci.edu 9
-wics.ics.uci.edu 522
-plrg.ics.uci.edu 13
-emj.ics.uci.edu 20
-computableplant.ics.uci.edu 4
-perennialpolycultures.ics.uci.edu 1
-hai.ics.uci.edu 1
-create.ics.uci.edu 6
-grape.ics.uci.edu 63
-sli.ics.uci.edu 59
-wiki.ics.uci.edu 1
-archive.ics.uci.edu 3
-hpi.ics.uci.edu 2
-isg.ics.uci.edu 155
-iasl.ics.uci.edu 11
-asterix.ics.uci.edu 4
-flamingo.ics.uci.edu 8
-fr.ics.uci.edu 2
-www-db.ics.uci.edu 3
-ngs.ics.uci.edu 1683
-tastier.ics.uci.edu 1
-ipubmed.ics.uci.edu 1
-sherlock.ics.uci.edu 1
-cert.ics.uci.edu 2
 xtune.ics.uci.edu 2
-esl.ics.uci.edu 1
-cradl.ics.uci.edu 12
-riscit.ics.uci.edu 1
+www-db.ics.uci.edu 3
+cert.ics.uci.edu 8
+scale.ics.uci.edu 3
+iasl.ics.uci.edu 12
+statconsulting.ics.uci.edu 3
+hai.ics.uci.edu 5
+mcs.ics.uci.edu 47
+plrg.ics.uci.edu 13
+circadiomics.ics.uci.edu 4
+cdb.ics.uci.edu 12
+mlphysics.ics.uci.edu 1
+sherlock.ics.uci.edu 4
+dgillen.ics.uci.edu 10
+emj.ics.uci.edu 17
+computableplant.ics.uci.edu 9
+radicle.ics.uci.edu 2
+duttgroup.ics.uci.edu 42
 mhcid.ics.uci.edu 10
-informatics.ics.uci.edu 1
+mds.ics.uci.edu 14
+cradl.ics.uci.edu 12
+riscit.ics.uci.edu 2
+ngs.ics.uci.edu 1077
+perennialpolycultures.ics.uci.edu 1
+tad.ics.uci.edu 1
+unite.ics.uci.edu 5
+cyberclub.ics.uci.edu 2
+swiki.ics.uci.edu 90
+cml.ics.uci.edu 75
+mdogucu.ics.uci.edu 4
 redmiles.ics.uci.edu 4
 graphmod.ics.uci.edu 1
-studentcouncil.ics.uci.edu 1
-cbcl.ics.uci.edu 2
-cyberclub.ics.uci.edu 1
-chenli.ics.uci.edu 3
-hobbes.ics.uci.edu 1
-ipf.ics.uci.edu 1
-mcs.ics.uci.edu 50
-unite.ics.uci.edu 5
-vision.ics.uci.edu 1
-statconsulting.ics.uci.edu 3
-aiclub.ics.uci.edu 1
-dgillen.ics.uci.edu 13
-mdogucu.ics.uci.edu 1
-mds.ics.uci.edu 14
+informatics.ics.uci.edu 1
+datalab.ics.uci.edu 1
+esl.ics.uci.edu 2
