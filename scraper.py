@@ -1,5 +1,5 @@
 import re
-from urllib.parse import urlparse
+from urllib.parse import urlparsehttps://github.com/Vini251/spacetime-crawler4py/blob/master/scraper.py
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 import nltk
@@ -137,6 +137,7 @@ def is_valid(url):
 
         #This part checks with the url ends with one of these extensions or does it contain these parts in the url. if it does return False.
         #This also checks if the domain is in the 4 main given domains or not
+        # re.match checkes the end of the link, while re.search checkes the whole link
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
